@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "209397203869",
+    "firebase_url": "https://salanika-default-rtdb.firebaseio.com",
+    "project_id": "salanika",
+    "storage_bucket": "salanika.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209397203869:android:64e8090d15e516fbe86574",
+        "android_client_info": {
+          "package_name": "com.example.ebook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209397203869-rr1cj2iqa130vpn8chl25m3uc4j590pr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhBl_z0GNtx5oXYHW9UaY0AofF-_BcpG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209397203869-rr1cj2iqa130vpn8chl25m3uc4j590pr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209397203869:android:597608ff3fcc8805e86574",
+        "android_client_info": {
+          "package_name": "com.mba.my_mechanic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209397203869-pbfiop56parsqb1jhgb2bbg7jldhec1s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mba.my_mechanic",
+            "certificate_hash": "3cbc11d51757142302de48970acb57f95a4d2810"
+          }
+        },
+        {
+          "client_id": "209397203869-rr1cj2iqa130vpn8chl25m3uc4j590pr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhBl_z0GNtx5oXYHW9UaY0AofF-_BcpG8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209397203869-rr1cj2iqa130vpn8chl25m3uc4j590pr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

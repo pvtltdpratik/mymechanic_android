@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/cogwheel"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/cogwheel"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyMechanic">
+        <meta-data
+            android:name="com.ola.maps.API_KEY"
+            android:value="JvMReRuo3FmjaDsKcsCpE3NInhuLc3liObU8R3Gy" />
+
+        <activity android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.mba.my_mechanic.RegisterActivity" />
+        <activity android:name="com.mba.my_mechanic.HomeActivity" />
+        <activity android:name="com.mba.my_mechanic.PhoneAuthActivity" />
+        <activity android:name="com.mba.my_mechanic.AdminActivity" />
+        <activity android:name="com.mba.my_mechanic.MapsActivity" />
+        <activity android:name="com.mba.my_mechanic.LoginActivity" />
+        <activity android:name="com.mba.my_mechanic.ProfileActivity" />
+        <activity android:name="com.mba.my_mechanic.AccountActivity" />
+        <activity android:name="com.mba.my_mechanic.EditProfileActivity" />
+
+
+
+    </application>
+
+</manifest>
