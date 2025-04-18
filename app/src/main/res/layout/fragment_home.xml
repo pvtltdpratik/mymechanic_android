@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.HomeFragment">
+
+        <!-- Main Content (Map, RecyclerView, etc.) -->
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <fragment
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:map="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MapsActivity" />
+
+                        <LinearLayout
+                            android:id="@+id/bottom_sheet"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#FFF"
+                            android:padding="16dp"
+                            android:orientation="vertical"
+                            android:layout_alignParentBottom="true"
+                            android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/place_name"
+                                    android:text="Place Name"
+                                    android:textStyle="bold"
+                                    android:textSize="18sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"/>
+
+                                <TextView
+                                    android:id="@+id/place_address"
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Address"/>
+
+                                <TextView
+                                    android:id="@+id/place_phone"
+                                    android:layout_height="match_parent"
+                                    android:layout_width="match_parent"
+                                    android:text="Phone"/>
+                        </LinearLayout>
+
+
+
+        </FrameLayout>
+
+</LinearLayout>

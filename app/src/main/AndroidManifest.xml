@@ -16,6 +16,10 @@
             android:name="com.ola.maps.API_KEY"
             android:value="JvMReRuo3FmjaDsKcsCpE3NInhuLc3liObU8R3Gy" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBPWMFhG63RCR2asfQgpGkBlv9M4FixTGY" />
+
         <activity android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
@@ -32,10 +36,8 @@
         <activity android:name="com.mba.my_mechanic.AdminActivity" />
         <activity android:name="com.mba.my_mechanic.MapsActivity" />
         <activity android:name="com.mba.my_mechanic.LoginActivity" />
-        <activity android:name="com.mba.my_mechanic.ProfileActivity" />
         <activity android:name="com.mba.my_mechanic.AccountActivity" />
         <activity android:name="com.mba.my_mechanic.EditProfileActivity" />
-
 
 
     </application>

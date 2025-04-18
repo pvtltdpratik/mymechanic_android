@@ -3,7 +3,6 @@ package com.mba.my_mechanic;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.mba.my_mechanic.fragments.HomeFragment;
+
 import java.util.concurrent.TimeUnit;
 
 public class PhoneAuthActivity extends AppCompatActivity {
@@ -91,7 +92,7 @@ public class PhoneAuthActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(PhoneAuthActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(PhoneAuthActivity.this, HomeActivity.class));
+                        startActivity(new Intent(PhoneAuthActivity.this, HomeFragment.class));
                         finish();
                     } else {
                         Toast.makeText(PhoneAuthActivity.this, "Invalid OTP", Toast.LENGTH_SHORT).show();

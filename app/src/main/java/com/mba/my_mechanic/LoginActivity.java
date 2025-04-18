@@ -2,14 +2,12 @@ package com.mba.my_mechanic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.mba.my_mechanic.fragments.HomeFragment;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
@@ -50,10 +50,6 @@ public class LoginActivity extends AppCompatActivity {
         registerTextView.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
         loginButton.setOnClickListener(v -> loginUser());
-
-
-        mAuth = FirebaseAuth.getInstance();
-
         // Configure Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // Get this from google-services.json
@@ -67,22 +63,50 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String email = emailEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                checkUserRole();
-            } else {
-                Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        boolean isUserFound = false;
+
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String storedEmail = document.getString("email");
+                            String storedPassword = document.getString("password");
+
+                            if (storedEmail != null && storedPassword != null &&
+                                    storedEmail.equals(email) && storedPassword.equals(password)) {
+
+                                isUserFound = true;
+                                String role = document.getString("role");
+
+                                if ("admin".equals(role)) {
+                                    startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                                } else {
+                                    startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+                                }
+                                finish();
+                                break;
+                            }
+                        }
+
+                        if (!isUserFound) {
+                            Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
+
 
     private void checkUserRole() {
         String userId = mAuth.getCurrentUser().getUid();

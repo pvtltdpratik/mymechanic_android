@@ -5,8 +5,19 @@ import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mba.my_mechanic.adapters.AdminViewPagerAdapter;
+import com.mba.my_mechanic.fragments.admin.AdminGaragesFragment;
+import com.mba.my_mechanic.fragments.admin.AdminMechanicList;
+import com.mba.my_mechanic.fragments.admin.AdminNewRequestsFragment;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,18 +26,33 @@ public class AdminActivity extends AppCompatActivity {
     private Button addGarageButton, assignRoleButton;
     private FirebaseFirestore db;
 
+    private TabLayout tableLayout;
+
+    private ViewPager2 viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
         db = FirebaseFirestore.getInstance();
-        addGarageButton = findViewById(R.id.addGarageButton);
-        assignRoleButton = findViewById(R.id.assignRoleButton);
 
-        // Assign Roles
-        assignRoleButton.setOnClickListener(v -> assignRole("user123", "Mechanic")); // Example: Change Role
+        tableLayout = findViewById(R.id.admin_tablayout);
+        viewPager = findViewById(R.id.admin_viewpager);
+
+        AdminViewPagerAdapter adapter = new AdminViewPagerAdapter(this); // pass FragmentActivity to constructor
+        adapter.addFragment(new AdminGaragesFragment(), "Garages");
+        adapter.addFragment(new AdminNewRequestsFragment(), "New Requests");
+        adapter.addFragment(new AdminMechanicList(), "Mechanics");
+
+        viewPager.setAdapter(adapter);
+
+        // This is the correct way for ViewPager2
+        new TabLayoutMediator(tableLayout, viewPager,
+                (tab, position) -> tab.setText(adapter.getTitle(position))
+        ).attach();
     }
+
 
     private void assignRole(String userId, String role) {
         Map<String, Object> updates = new HashMap<>();

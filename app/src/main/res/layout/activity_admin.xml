@@ -1,97 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".AdminActivity"
-    android:background="@color/white">
-
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/adminToolbar"
+<FrameLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:title="Admin Panel"
-        android:titleTextColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_height="match_parent">
 
-    <!-- CardView for Assign Roles -->
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintTop_toBottomOf="@id/adminToolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/admin_tablayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_height="wrap_content">
 
-            <TextView
+            <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Assign Roles"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+                android:text="Garages" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/assignRoleButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Assign Role"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:cornerRadius="8dp"
-                android:layout_marginTop="8dp"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- CardView for Adding Garage -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintTop_toBottomOf="@+id/assignRoleButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
+            <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Garage to Map"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+                android:text="New Requests" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addGarageButton"
-                android:layout_width="match_parent"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Garage"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:cornerRadius="8dp"
-                android:layout_marginTop="8dp"/>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                android:text="Manual" />
+        </com.google.android.material.tabs.TabLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/admin_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="774dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

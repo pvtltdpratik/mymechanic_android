@@ -4,12 +4,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,98 +16,75 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private FirebaseFirestore db;
     private FusedLocationProviderClient fusedLocationClient;
-    private static final int LOCATION_PERMISSION_REQUEST = 100;
+    private final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_maps); // Make sure your layout has the <fragment> with id map
 
-
-
-        // Initialize Firestore
-        db = FirebaseFirestore.getInstance();
-
-        // Initialize Location Client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Get Map Fragment and Load Map
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapView);
+                .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Enable Location if Permission is Granted
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-            getUserLocation();
-        } else {
-            // Request Permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+        // Enable My Location if permission granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            return;
         }
 
-        // Load Garages from Firestore
-        loadGaragesOnMap();
+        mMap.setMyLocationEnabled(true);
+        showCurrentLocation();
     }
 
-    // Get Current User Location
-    private void getUserLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, location -> {
-                        if (location != null) {
-                            LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 12));
-                        }
-                    });
-        }
-    }
-
-    // Load Garages from Firestore and Display on Map
-    private void loadGaragesOnMap() {
-        db.collection("garages").get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            double lat = document.getDouble("latitude");
-                            double lng = document.getDouble("longitude");
-                            String name = document.getString("name");
-
-                            LatLng garageLocation = new LatLng(lat, lng);
-                            mMap.addMarker(new MarkerOptions().position(garageLocation).title(name));
-                        }
-                    } else {
-                        Toast.makeText(this, "Failed to load garages!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    // Handle Permission Request Result
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    mMap.setMyLocationEnabled(true);
-                    getUserLocation();
+    @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    private void showCurrentLocation() {
+        Task<Location> locationTask = fusedLocationClient.getLastLocation();
+        locationTask.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null && mMap != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!"));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                 }
-            } else {
-                Toast.makeText(this, "Location permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Handle permission result
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                    showCurrentLocation();
+                }
             }
         }
     }

@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -15,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mba.my_mechanic.fragments.HomeFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -31,7 +31,7 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
+        setContentView(R.layout.fragment_profile);
 
         // Hide ActionBar
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -65,7 +65,7 @@ public class AccountActivity extends AppCompatActivity {
         // Bottom Navigation Handling
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
-                startActivity(new Intent(AccountActivity.this, HomeActivity.class));
+                startActivity(new Intent(AccountActivity.this, HomeFragment.class));
                 finish();
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {

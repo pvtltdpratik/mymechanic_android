@@ -1,98 +1,86 @@
 package com.mba.my_mechanic;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Switch;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private Switch switchDarkMode, switchNotifications;
-    private Button btnChangePassword, btnLogout;
-    private LinearLayout buttonAccount;
+    private TextView profileName, profileEmail;
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseUser currentUser;
+    private ImageView profileImage;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
 
-        // 🚀 Check if user is logged in **before** loading UI
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
+
+
+        // Initialize your views and other components here
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        profileName = findViewById(R.id.account_name);
+        profileImage = findViewById(R.id.profile_image);
         if (currentUser == null) {
-            startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+            Toast.makeText(this, "User not logged in!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
-            return;  // **Exit onCreate() to avoid running extra code**
+            return;
         }
 
-        setContentView(R.layout.activity_profile);
-        getSupportActionBar().hide();
+        String userId = currentUser.getUid();
+        DocumentReference userRef = db.collection("users").document(userId);
 
-        // ✅ Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                // User exists in Firestore (Non-Google login)
+                String name = documentSnapshot.getString("name");
+                String email = documentSnapshot.getString("email");
+                String phone = documentSnapshot.getString("phone");
+                String profileUrl = documentSnapshot.getString("profile_picture_url");
+                Double latitude = documentSnapshot.getDouble("location.latitude");
+                Double longitude = documentSnapshot.getDouble("location.longitude");
 
-        // 🔥 Initialize UI Elements
-        switchDarkMode = findViewById(R.id.switchDarkMode);
-        switchNotifications = findViewById(R.id.switchNotifications);
-        buttonAccount = findViewById(R.id.button_account);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
-        Button logoutButton = findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut(); // Firebase logout
-            GoogleSignIn.getClient(this, GoogleSignInOptions.DEFAULT_SIGN_IN).signOut();
+                // Update UI
+                profileName.setText(name != null ? name : "No Name");
 
-            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();  // Close current activity
-        });
 
-        // 🔹 Go to AccountActivity when clicking "Account"
-        buttonAccount.setOnClickListener(v -> {
-            startActivity(new Intent(ProfileActivity.this, AccountActivity.class));
-        });
+                // Load Profile Picture using Picasso
+                if (profileUrl != null && !profileUrl.isEmpty()) {
+                    Picasso.get().load(profileUrl).into(profileImage);
+                } else {
+                    profileImage.setImageResource(R.drawable.ic_profile_placeholder);
+                }
 
-        // ✅ Load saved theme mode
-        boolean isDarkMode = sharedPreferences.getBoolean("DarkMode", false);
-        switchDarkMode.setChecked(isDarkMode);
-        AppCompatDelegate.setDefaultNightMode(isDarkMode ?
-                AppCompatDelegate.MODE_NIGHT_YES :
-                AppCompatDelegate.MODE_NIGHT_NO);
-
-        // 🔹 Toggle Dark Mode
-        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("DarkMode", isChecked).apply();
-            AppCompatDelegate.setDefaultNightMode(isChecked ?
-                    AppCompatDelegate.MODE_NIGHT_YES :
-                    AppCompatDelegate.MODE_NIGHT_NO);
-            recreate();
-        });
-
-        // ✅ Fix Bottom Navigation issue
-        bottomNavigationView.setSelectedItemId(R.id.nav_profile);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_home) {
-                startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
-                finish();
-                return true;
+            } else {
+                // Handle Google Sign-In Users
+                Toast.makeText(this, "Error fetching user data!", Toast.LENGTH_SHORT).show();
             }
-            // ❌ Avoid infinite loop when clicking "Profile"
-            return false;
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Error fetching user data!", Toast.LENGTH_SHORT).show();
         });
+
     }
+
 }

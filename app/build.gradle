@@ -1,9 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     id 'com.google.gms.google-services'
-
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
-
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+}
 android {
     namespace 'com.mba.my_mechanic'
     compileSdk 35
@@ -36,6 +39,7 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.firebase.storage
+    implementation libs.places
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -58,23 +62,23 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
-
-    //OlaMap SDK
-    implementation(files("libs/OlaMapSdk-1.6.0.aar"))
-    implementation fileTree(dir: "libs", include: ["*.aar"])
-
-    //implementation(name: 'OlaMapSdk-1.6.0', ext: 'aar')
 
     //Maplibre
     implementation ("org.maplibre.gl:android-sdk:10.0.2")
     implementation ("org.maplibre.gl:android-plugin-annotation-v9:1.0.0")
     implementation ("org.maplibre.gl:android-plugin-markerview-v9:1.0.0")
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
     //places sdk
-    implementation(files("libs/Places-sdk-2.3.9.jar"))
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'com.google.android.libraries.places:places:3.3.0'
 
     //navigation sdk
     implementation "org.maplibre.gl:android-sdk:10.2.0"
