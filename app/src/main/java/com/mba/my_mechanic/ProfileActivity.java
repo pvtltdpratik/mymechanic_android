@@ -27,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private ImageView profileImage;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
@@ -35,52 +36,38 @@ public class ProfileActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        sharedPreferences = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-
-
-        // Initialize your views and other components here
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         profileName = findViewById(R.id.account_name);
         profileImage = findViewById(R.id.profile_image);
-        if (currentUser == null) {
-            Toast.makeText(this, "User not logged in!", Toast.LENGTH_SHORT).show();
+
+        // Check Google Sign-In
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account == null) {
+            Toast.makeText(this, "User not logged in with Google account!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        String userId = currentUser.getUid();
-        DocumentReference userRef = db.collection("users").document(userId);
+        if (currentUser == null) {
+            Toast.makeText(this, "Firebase user is null!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
 
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // User exists in Firestore (Non-Google login)
-                String name = documentSnapshot.getString("name");
-                String email = documentSnapshot.getString("email");
-                String phone = documentSnapshot.getString("phone");
-                String profileUrl = documentSnapshot.getString("profile_picture_url");
-                Double latitude = documentSnapshot.getDouble("location.latitude");
-                Double longitude = documentSnapshot.getDouble("location.longitude");
+        // Proceed with fetching and displaying profile
+        String name = account.getDisplayName();
+        String email = account.getEmail();
+        String photoUrl = (account.getPhotoUrl() != null) ? account.getPhotoUrl().toString() : null;
 
-                // Update UI
-                profileName.setText(name != null ? name : "No Name");
+        profileName.setText(name != null ? name : "No Name");
 
-
-                // Load Profile Picture using Picasso
-                if (profileUrl != null && !profileUrl.isEmpty()) {
-                    Picasso.get().load(profileUrl).into(profileImage);
-                } else {
-                    profileImage.setImageResource(R.drawable.ic_profile_placeholder);
-                }
-
-            } else {
-                // Handle Google Sign-In Users
-                Toast.makeText(this, "Error fetching user data!", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Error fetching user data!", Toast.LENGTH_SHORT).show();
-        });
-
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            Picasso.get().load(photoUrl).into(profileImage);
+        } else {
+            profileImage.setImageResource(R.drawable.ic_profile_placeholder);
+        }
     }
+
 
 }
