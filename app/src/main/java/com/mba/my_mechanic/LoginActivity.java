@@ -89,8 +89,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if ("admin".equals(role)) {
                                     startActivity(new Intent(LoginActivity.this, AdminActivity.class));
-                                } else {
-                                    startActivity(new Intent(LoginActivity.this, MapsActivity.class));
+                                } else if("users".equals(role)) {
+                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                 }
                                 finish();
                                 break;
