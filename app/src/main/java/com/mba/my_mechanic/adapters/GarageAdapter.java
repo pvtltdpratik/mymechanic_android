@@ -5,26 +5,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.mba.my_mechanic.R;
+import com.mba.my_mechanic.fragments.admin.EditGarageDialogFragment;
 import com.mba.my_mechanic.models.Garage;
 
 import java.util.List;
-
 public class GarageAdapter extends ArrayAdapter<Garage> {
-
     private final Context context;
     private final List<Garage> garageList;
 
-    public GarageAdapter(@NonNull Context context, List<Garage> garageList) {
+    public interface OnGarageEditClickListener {
+        void onGarageEdit(Garage garage);
+    }
+
+    private final OnGarageEditClickListener listener;
+
+    public GarageAdapter(@NonNull Context context, List<Garage> garageList, OnGarageEditClickListener listener) {
         super(context, 0, garageList);
         this.context = context;
         this.garageList = garageList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,19 +44,24 @@ public class GarageAdapter extends ArrayAdapter<Garage> {
             convertView = LayoutInflater.from(context).inflate(R.layout.garage_list_item, parent, false);
         }
 
-        TextView nameTextView = convertView.findViewById(R.id.garageNameTextView);
-        TextView addressTextView = convertView.findViewById(R.id.garageAddressTextView);
-        ImageView logoImageView = convertView.findViewById(R.id.garageLogoImageView);
+        TextView nameTV = convertView.findViewById(R.id.garageNameTextView);
+        TextView addressTV = convertView.findViewById(R.id.garageAddressTextView);
+        ImageButton editButton = convertView.findViewById(R.id.editGarageButton);
 
-        nameTextView.setText(garage.garage_name);
-        addressTextView.setText(garage.garage_address);
+        editButton.setOnClickListener(v -> {
+            EditGarageDialogFragment dialog = new EditGarageDialogFragment();
+            dialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "EditGarageDialog");
+        });
 
-        // Load image using Glide
-        Glide.with(context)
-                .load(garage.logo_url) // Assuming garage.logo_url is a String
-                .placeholder(R.drawable.cogwheel) // fallback if loading fails
-                .error(R.drawable.fender_bender) // optional error placeholder
-                .into(logoImageView);
+
+        nameTV.setText(garage.getGarageName());
+        addressTV.setText(garage.getGarageAddress());
+
+        editButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onGarageEdit(garage);
+            }
+        });
 
         return convertView;
     }

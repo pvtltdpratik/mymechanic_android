@@ -32,6 +32,8 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mba.my_mechanic.R;
 
 import org.json.JSONArray;
@@ -47,12 +49,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private View bottomSheet;
     private TextView placeName, placeAddress, placePhone;
 
+    private FirebaseFirestore firestore;
+
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        firestore = FirebaseFirestore.getInstance();
 
         // Initialize Places
         if (!Places.isInitialized()) {
@@ -115,6 +122,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         // Handle map click
         mMap.setOnMapClickListener(this::getPlaceDetails);
         getLastLocationAndShowGarages();
+        fetchGaragesFromFirestore();
     }
 
     private void getPlaceDetails(LatLng latLng) {
@@ -213,4 +221,36 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(requireContext(), "Permission denied", LENGTH_SHORT).show();
         }
     }
+
+    private void fetchGaragesFromFirestore() {
+        firestore.collection("garages")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        // Extract data from the document
+                        String garageName = documentSnapshot.getString("garage_name");
+                        String garageAddress = documentSnapshot.getString("garage_address");
+                        double garageLatitude = documentSnapshot.getDouble("garage_latitude");
+                        double garageLongitude = documentSnapshot.getDouble("garage_longitude");
+                        String garagePhone = documentSnapshot.getString("garage_phone_number");
+                        double garageRatings = documentSnapshot.getDouble("garage_ratings");
+
+                        // Create LatLng object
+                        LatLng garageLocation = new LatLng(garageLatitude, garageLongitude);
+
+                        // Create marker options with the snippet (additional info)
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(garageLocation)
+                                .title(garageName)
+                                .snippet("Address: " + garageAddress + "\nPhone: " + garagePhone + "\nRating: " + garageRatings);
+
+                        // Add marker to the map
+                        mMap.addMarker(markerOptions);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Failed to fetch garages", Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }

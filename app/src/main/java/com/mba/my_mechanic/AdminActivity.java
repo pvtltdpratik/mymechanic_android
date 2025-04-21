@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.mba.my_mechanic.adapters.AdminViewPagerAdapter;
 import com.mba.my_mechanic.fragments.admin.AdminGaragesFragment;
 import com.mba.my_mechanic.fragments.admin.AdminMechanicList;
-import com.mba.my_mechanic.fragments.admin.AdminNewRequestsFragment;
+import com.mba.my_mechanic.fragments.admin.AdminRequestsFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class AdminActivity extends AppCompatActivity {
 
         AdminViewPagerAdapter adapter = new AdminViewPagerAdapter(this); // pass FragmentActivity to constructor
         adapter.addFragment(new AdminGaragesFragment(), "Garages");
-        adapter.addFragment(new AdminNewRequestsFragment(), "New Requests");
+        adapter.addFragment(new AdminRequestsFragment(), "New Requests");
         adapter.addFragment(new AdminMechanicList(), "Mechanics");
 
         viewPager.setAdapter(adapter);

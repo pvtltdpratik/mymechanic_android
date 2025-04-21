@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mba.my_mechanic.fragments.HomeFragment;
 import com.mba.my_mechanic.fragments.ProfileFragment;
+import com.mba.my_mechanic.fragments.RequestServiceFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -36,6 +37,8 @@ public class HomeActivity extends AppCompatActivity {
                 selectedFragment = new HomeFragment();
             } else if (item.getItemId() == R.id.nav_profile) {
                 selectedFragment = new ProfileFragment();
+            }else if (item.getItemId() == R.id.nav_request_service) {
+                selectedFragment = new RequestServiceFragment();
             }
             // Add more else-if blocks for other menu items if needed
             // else if (item.getItemId() == R.id.nav_settings) {

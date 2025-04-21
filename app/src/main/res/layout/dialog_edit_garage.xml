@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Garage Name -->
+        <EditText
+            android:id="@+id/editGarageName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Garage Name"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
+        <!-- Garage Address -->
+        <EditText
+            android:id="@+id/editGarageAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Garage Address"
+            android:inputType="textPostalAddress"
+            android:minHeight="48dp" />
+
+        <!-- Latitude -->
+        <EditText
+            android:id="@+id/editGarageLatitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Latitude"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp" />
+
+        <!-- Longitude -->
+        <EditText
+            android:id="@+id/editGarageLongitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Longitude"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp" />
+
+        <!-- Phone Number -->
+        <EditText
+            android:id="@+id/editGaragePhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Phone Number"
+            android:inputType="phone"
+            android:minHeight="48dp" />
+
+        <!-- Ratings -->
+        <EditText
+            android:id="@+id/editGarageRatings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Ratings"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp" />
+
+        <!-- State -->
+        <EditText
+            android:id="@+id/editGarageState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="State"
+            android:inputType="text"
+            android:minHeight="48dp" />
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/btnUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -36,9 +36,6 @@ public class ProfileActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        profileName = findViewById(R.id.account_name);
-        profileImage = findViewById(R.id.profile_image);
-
         // Check Google Sign-In
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account == null) {
@@ -59,8 +56,6 @@ public class ProfileActivity extends AppCompatActivity {
         String name = account.getDisplayName();
         String email = account.getEmail();
         String photoUrl = (account.getPhotoUrl() != null) ? account.getPhotoUrl().toString() : null;
-
-        profileName.setText(name != null ? name : "No Name");
 
         if (photoUrl != null && !photoUrl.isEmpty()) {
             Picasso.get().load(photoUrl).into(profileImage);

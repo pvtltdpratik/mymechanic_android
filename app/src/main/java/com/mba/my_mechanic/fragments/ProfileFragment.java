@@ -46,8 +46,6 @@ public class ProfileFragment extends Fragment {
 
         sharedPreferences = requireActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
 
-        switchDarkMode = view.findViewById(R.id.switchDarkMode);
-        switchNotifications = view.findViewById(R.id.switchNotifications);
         buttonAccount = view.findViewById(R.id.button_account);
         Button logoutButton = view.findViewById(R.id.logoutButton);
 
@@ -63,20 +61,6 @@ public class ProfileFragment extends Fragment {
 
         buttonAccount.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), AccountActivity.class));
-        });
-
-        boolean isDarkMode = sharedPreferences.getBoolean("DarkMode", false);
-        switchDarkMode.setChecked(isDarkMode);
-        AppCompatDelegate.setDefaultNightMode(isDarkMode ?
-                AppCompatDelegate.MODE_NIGHT_YES :
-                AppCompatDelegate.MODE_NIGHT_NO);
-
-        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            sharedPreferences.edit().putBoolean("DarkMode", isChecked).apply();
-            AppCompatDelegate.setDefaultNightMode(isChecked ?
-                    AppCompatDelegate.MODE_NIGHT_YES :
-                    AppCompatDelegate.MODE_NIGHT_NO);
-            requireActivity().recreate();
         });
 
         return view;

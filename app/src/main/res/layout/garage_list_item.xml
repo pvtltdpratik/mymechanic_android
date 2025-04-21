@@ -3,22 +3,21 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     card_view:cardCornerRadius="12dp"
-    card_view:cardElevation="6dp">
+    android:layout_margin="8dp"
+    android:elevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:gravity="center_vertical">
+        android:padding="16dp">
 
-        <!-- Left side: Name & Address -->
+        <!-- Left: Garage Info -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -27,8 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="Garage Name"
                 android:textStyle="bold"
-                android:textSize="16sp"
-                android:textColor="@android:color/black" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/garageAddressTextView"
@@ -36,17 +34,25 @@
                 android:layout_height="wrap_content"
                 android:text="Garage Address"
                 android:textSize="14sp"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="4dp" />
+                android:textColor="#666" />
         </LinearLayout>
 
-        <!-- Right side: Logo -->
-        <ImageView
-            android:id="@+id/garageLogoImageView"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:src="@drawable/cogwheel"
-            android:scaleType="centerCrop"
-            android:layout_marginStart="8dp" />
+        <!-- Right: Edit Button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/editGarageButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:src="@android:drawable/ic_menu_edit"
+                android:contentDescription="Edit" />
+
+        </LinearLayout>
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

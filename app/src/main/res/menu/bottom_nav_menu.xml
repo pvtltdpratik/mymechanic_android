@@ -8,8 +8,13 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/nav_request_service"
+        android:icon="@drawable/gs_open_in_new_vd_24"
+        android:title="Request"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_profile"
         android:title="Profile"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 </menu>
