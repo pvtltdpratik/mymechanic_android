@@ -50,9 +50,27 @@ public class AdminRequestsFragment extends Fragment {
                     requestList.clear();
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         String id = doc.getId();
-                        String garageId = doc.getDocumentReference("garage_id") != null ? doc.getDocumentReference("garage_id").getId() : null;
-                        String mechanicId = doc.getDocumentReference("mechanic_id") != null ? doc.getDocumentReference("mechanic_id").getId() : null;
-                        String userId = doc.getDocumentReference("user_id") != null ? doc.getDocumentReference("user_id").getId() : null;
+                        String mechanicId = doc.contains("mechanic_id") && doc.get("mechanic_id") != null
+                                ? doc.getDocumentReference("mechanic_id").getId() : null;
+
+                        Object userIdObj = doc.get("user_id");
+                        String userId = null;
+
+                        if (userIdObj instanceof com.google.firebase.firestore.DocumentReference) {
+                            userId = ((com.google.firebase.firestore.DocumentReference) userIdObj).getId();
+                        } else if (userIdObj instanceof String) {
+                            userId = (String) userIdObj;
+                        }
+
+                        Object garageIdObj = doc.get("garage_id");
+                        String garageId = null;
+                        if (garageIdObj instanceof com.google.firebase.firestore.DocumentReference) {
+                            garageId = ((com.google.firebase.firestore.DocumentReference) garageIdObj).getId();
+                        } else if (garageIdObj instanceof String) {
+                            garageId = (String) garageIdObj;
+                        }
+
+
 
                         requestList.add(new ServiceRequest(
                                 id,

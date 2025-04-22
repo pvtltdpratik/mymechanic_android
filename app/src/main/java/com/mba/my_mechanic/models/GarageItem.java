@@ -49,24 +49,6 @@ public class GarageItem {
     public void setAddress(String address) {
         this.address = address;
     }
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public void setGarageItem(GarageItem garageItem) {
-        this.name = garageItem.getName();
-        this.id = garageItem.getId();
-        this.phone = garageItem.getPhone();
-        this.address = garageItem.getAddress();
-        this.latitude = garageItem.getLatitude();
-        this.longitude = garageItem.getLongitude();
-        this.distance = garageItem.getDistance();
-    }
 
     @Override
     public String toString() {

@@ -73,7 +73,6 @@ public class RequestServiceFragment extends Fragment {
         etLocation = view.findViewById(R.id.editTextUserLocation);
         etPhone = view.findViewById(R.id.editTextPhone);
         submitBtn = view.findViewById(R.id.buttonSubmitRequest);
-//        spinnerGarage = view.findViewById(R.id.spinnerGarage); // ✅ Initialize Spinner here
         btnGetLocation = view.findViewById(R.id.buttonGetLocation);
 
         firestore = FirebaseFirestore.getInstance();
@@ -104,7 +103,8 @@ public class RequestServiceFragment extends Fragment {
                 });
     }
 
-    private void fetchAddressFromLocation(Location location) {
+    private void fetchAddressFromLocation(Location location)
+    {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
@@ -120,82 +120,6 @@ public class RequestServiceFragment extends Fragment {
         }
     }
 
-
-
-//    private void fetchNearbyGaragesSorted(Location userLocation) {
-//        FirebaseFirestore.getInstance().collection("garage")
-//                .whereEqualTo("state", "sambhajinagar") // ✅ Filter by state
-//                .get()
-//                .addOnSuccessListener(querySnapshot -> {
-//                    garageList.clear();
-//                    for (QueryDocumentSnapshot doc : querySnapshot) {
-//                        String id = doc.getId();
-//                        String name = doc.getString("garage_name");
-//                        String address = doc.getString("garage_address");
-//                        String phone = doc.getString("garage_phone_number");
-//                        double lat = doc.getDouble("garage_latitude");
-//                        double lng = doc.getDouble("garage_longitude");
-//
-//                        float[] results = new float[1];
-//                        Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), lat, lng, results);
-//                        double distanceInKm = results[0] / 1000.0;
-//
-//                        garageList.add(new GarageItem(id, name, address, phone, lat, lng, distanceInKm));
-//                    }
-//
-//                    // Sort by distance
-//                    Collections.sort(garageList, Comparator.comparingDouble(GarageItem::getDistance));
-//
-//                    // Set adapter
-//                    ArrayAdapter<GarageItem> adapter = new ArrayAdapter<>(requireContext(),
-//                            android.R.layout.simple_spinner_dropdown_item, garageList);
-//                    spinnerGarage.setAdapter(adapter);
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(getContext(), "Failed to fetch garages", Toast.LENGTH_SHORT).show();
-//                });
-//    }
-
-
-
-
-//    private void fetchNearbyGaragesSorted(Location userLocation) {
-//        FirebaseFirestore.getInstance().collection("garage")
-//                .get()
-//                .addOnSuccessListener(querySnapshot -> {
-//                    garageList.clear();
-//                    for (QueryDocumentSnapshot doc : querySnapshot) {
-//                        String id = doc.getId();
-//                        String name = doc.getString("garage_name");
-//                        String address = doc.getString("garage_address");
-//                        String phone = doc.getString("garage_phone_number");
-//                        if (doc.getDouble("garage_latitude") == null || doc.getDouble("garage_longitude") == null)
-//                            continue;
-//                        double lat = doc.getDouble("garage_latitude");
-//                        double lng = doc.getDouble("garage_longitude");
-//
-//                        float[] results = new float[1];
-//                        Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), lat, lng, results);
-//                        double distanceInKm = results[0] / 1000.0;
-//
-//                        garageList.add(new GarageItem(id, name, address, phone, lat, lng, distanceInKm));
-//                    }
-//
-//                    // Sort by distance
-//                    Collections.sort(garageList, Comparator.comparingDouble(GarageItem::getDistance));
-//                    Log.d("GARAGE_FETCH", "Fetched " + garageList.size() + " garages");
-//
-//
-//                    // Set to Spinner
-//                    ArrayAdapter<GarageItem> adapter = new ArrayAdapter<>(requireContext(),
-//                            android.R.layout.simple_spinner_dropdown_item, garageList);
-//                    spinnerGarage.setAdapter(adapter);
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(getContext(), "Failed to fetch garages", Toast.LENGTH_SHORT).show();
-//                });
-//    }
-
     private void submitServiceRequest() {
         String description = etDescription.getText().toString().trim();
         String vehicle = etVehicleType.getText().toString().trim();
@@ -207,14 +131,6 @@ public class RequestServiceFragment extends Fragment {
             Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        GarageItem selectedGarage = (GarageItem) spinnerGarage.getSelectedItem();
-        if (selectedGarage == null) {
-            Toast.makeText(getContext(), "Please select a garage", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String selectedGarageId = selectedGarage.getId();
 
         // Prepare the request object
         Map<String, Object> request = new HashMap<>();
@@ -228,7 +144,6 @@ public class RequestServiceFragment extends Fragment {
         request.put("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
         request.put("username", FirebaseAuth.getInstance().getCurrentUser().getEmail());
         request.put("mechanic_id", null);
-        request.put("garage_id", selectedGarageId);
 
         firestore.collection("service_requests")
                 .add(request)

@@ -38,8 +38,8 @@ public class AddGarageDialogFragment extends DialogFragment {
         EditText ratingET = view.findViewById(R.id.editGarageRatings);
         EditText stateET = view.findViewById(R.id.editGarageState);
         Button cancelBtn = view.findViewById(R.id.btnCancel);
-        Button username = view.findViewById(R.id.garageusername);
-        Button password = view.findViewById(R.id.garagepassword);
+        EditText username = view.findViewById(R.id.garageusername);
+        EditText password = view.findViewById(R.id.garagepassword);
         Button addBtn = view.findViewById(R.id.btnAdd);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
