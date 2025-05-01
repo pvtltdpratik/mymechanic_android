@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.mba.my_mechanic.R;
@@ -128,11 +129,16 @@ public class RequestServiceFragment extends Fragment {
 
         if (TextUtils.isEmpty(description) || TextUtils.isEmpty(vehicle)
                 || TextUtils.isEmpty(location) || TextUtils.isEmpty(phone)) {
-            Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Prepare the request object
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Map<String, Object> request = new HashMap<>();
         request.put("problem_description", description);
         request.put("vehicle_type", vehicle);
@@ -141,20 +147,21 @@ public class RequestServiceFragment extends Fragment {
         request.put("status", "pending");
         request.put("created_at", Timestamp.now());
         request.put("updated_at", Timestamp.now());
-        request.put("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        request.put("username", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        request.put("user_id", currentUser.getUid());
+        request.put("username", currentUser.getEmail());
         request.put("mechanic_id", null);
 
-        firestore.collection("service_requests")
+        FirebaseFirestore.getInstance().collection("service_requests")
                 .add(request)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(getContext(), "Service request submitted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Service request submitted!", Toast.LENGTH_SHORT).show();
                     clearFields();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private void clearFields() {
         etDescription.setText("");
